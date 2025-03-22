@@ -8,6 +8,13 @@ data/*
 !src/data/
 !src/data/**
 
+# models
+models/*
+!models/.gitkeep
+
+!src/models/
+!src/models/**
+
 # log
 log/*
 !log/.gitkeep

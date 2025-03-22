@@ -17,6 +17,7 @@ from sklearn.metrics import accuracy_score
 
 from src.data.dataset import create_dataset
 from src.utils.seeds import fix_seed, worker_init_fn
+from src.visualization.visualize import plot
 from src.models.models import CNN
 from src.models.coachs import CoachTeacher
 
@@ -43,6 +44,10 @@ def main():
 
     print("accuracy: ", accuracy)
     print(trues, preds)
+
+    plot(train_loss, test_loss)
+
+    torch.save(teacher, "teacher.pkl")
 
 if __name__ == "__main__":
     main()

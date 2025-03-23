@@ -8,4 +8,4 @@ mkdir ./log/$now
 python ./teacher.py 2>&1 | tee ./log/$now/log.txt
 
 mv loss.png ./log/$now/
-mv teacher.pkl ./models/
+mv teacher.pth ./models/

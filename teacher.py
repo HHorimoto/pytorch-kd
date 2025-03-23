@@ -50,7 +50,7 @@ def main():
 
     plot(train_loss, test_loss)
 
-    torch.save(teacher, "teacher.pkl")
+    torch.save(teacher.state_dict(), "teacher.pth")
 
 if __name__ == "__main__":
     fix_seed()

@@ -18,7 +18,7 @@ from src.data.dataset import create_dataset
 from src.utils.seeds import fix_seed, worker_init_fn
 from src.visualization.visualize import plot
 from src.models.models import CNN
-from src.models.coachs import CoachTeacher
+from src.models.coachs import Coach
 
 def main():
 
@@ -39,7 +39,7 @@ def main():
     optimizer = optim.Adam(teacher.parameters(), lr=LR)
     loss_fn = nn.CrossEntropyLoss()
 
-    coach = CoachTeacher(teacher, train_loader, test_loader, loss_fn, optimizer, device, EPOCHS)
+    coach = Coach(teacher, train_loader, test_loader, loss_fn, optimizer, device, EPOCHS)
     coach.train_test()
     train_loss, test_loss = coach.train_loss, coach.test_loss
     trues, preds = coach.evaluate()

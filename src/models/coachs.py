@@ -6,9 +6,9 @@ import time
 
 from src.models.loss import cross_entropy
 
-class CoachTeacher:
-    def __init__(self, teacher, train_loader, test_loader, loss_fn, optimizer, device, epochs):
-        self.teacher = teacher
+class Coach:
+    def __init__(self, model, train_loader, test_loader, loss_fn, optimizer, device, epochs):
+        self.model = model
         self.train_loader = train_loader
         self.test_loader = test_loader
         self.loss_fn = loss_fn
@@ -21,14 +21,14 @@ class CoachTeacher:
         self.test_loss, self.test_acc = [], []
 
     def _train_epoch(self):
-        self.teacher.train()
+        self.model.train()
         dataloader = self.train_loader
         batch_loss = []
         batch_count = 0
         for batch, (X, y) in enumerate(dataloader):
             X, y = X.to(self.device), y.to(self.device)
 
-            output = self.teacher(X)
+            output = self.model(X)
             loss = self.loss_fn(output, y)
 
             self.optimizer.zero_grad()
@@ -44,14 +44,14 @@ class CoachTeacher:
         return epoch_loss, epoch_acc
             
     def _test_epoch(self):
-        self.teacher.eval()
+        self.model.eval()
         dataloader = self.test_loader
         batch_loss = []
         batch_count = 0
         with torch.no_grad():
             for X, y in dataloader:
                 X, y = X.to(self.device), y.to(self.device)
-                output = self.teacher(X)
+                output = self.model(X)
                 loss = self.loss_fn(output, y)
 
                 batch_loss.append(loss.item())
@@ -78,14 +78,14 @@ class CoachTeacher:
             self.test_acc.append(test_epoch_acc)
 
     def evaluate(self):
-        self.teacher.eval()
+        self.model.eval()
         preds, tures = [], []
 
         dataloader = self.test_loader
         with torch.no_grad():
             for X, y in dataloader:
                 X, y = X.to(self.device), y.to(self.device)
-                output = self.teacher(X)
+                output = self.model(X)
                 tures.append(y)
                 preds.append(output)
                 
@@ -98,9 +98,10 @@ class CoachTeacher:
                 
         return tures, preds
     
-class CoachStudent(CoachTeacher):
+class CoachStudent(Coach):
     def __init__(self, student, teacher, train_loader, test_loader, loss_fn, optimizer, device, epochs):
         super().__init__(teacher, train_loader, test_loader, loss_fn, optimizer, device, epochs)
+        self.teacher = self.model
         self.student = student
     
     def _train_epoch(self):

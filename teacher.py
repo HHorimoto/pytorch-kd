@@ -53,4 +53,5 @@ def main():
     torch.save(teacher, "teacher.pkl")
 
 if __name__ == "__main__":
+    fix_seed()
     main()

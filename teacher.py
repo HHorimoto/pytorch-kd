@@ -23,10 +23,14 @@ from src.models.coachs import CoachTeacher
 
 def main():
 
-    ROOT = "./data/"
-    EPOCHS = 50
-    BATCH_SIZE = 64
-    LR = 0.001
+    with open('config_teacher.yaml') as file:
+        config_file = yaml.safe_load(file)
+    print(config_file)
+
+    ROOT = config_file['config']['root']
+    EPOCHS = config_file['config']['epochs']
+    BATCH_SIZE = config_file['config']['batch_size']
+    LR = config_file['config']['learning_rate']
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     

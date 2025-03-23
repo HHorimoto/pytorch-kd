@@ -4,6 +4,8 @@ import torch.nn as nn
 import numpy as np
 import time
 
+from src.models.loss import cross_entropy
+
 class CoachTeacher:
     def __init__(self, teacher, train_loader, test_loader, loss_fn, optimizer, device, epochs):
         self.teacher = teacher
@@ -95,3 +97,64 @@ class CoachTeacher:
         preds = preds.cpu().detach().numpy()
                 
         return tures, preds
+    
+class CoachStudent(CoachTeacher):
+    def __init__(self, student, teacher, train_loader, test_loader, loss_fn, optimizer, device, epochs):
+        super().__init__(teacher, train_loader, test_loader, loss_fn, optimizer, device, epochs)
+        self.student = student
+    
+    def _train_epoch(self):
+        self.student.train()
+        dataloader = self.train_loader
+        batch_loss = []
+        batch_count = 0
+        for batch, (X, y) in enumerate(dataloader):
+            X, y = X.to(self.device), y.to(self.device)
+
+            output_student = self.student(X)
+            output_teacher = self.teacher(X)
+
+            hard_loss = self.loss_fn(output_student, y)
+            soft_loss = cross_entropy(output_student, output_teacher, 4.)
+
+            loss = hard_loss + 4.0 * soft_loss
+            self.optimizer.zero_grad()
+            loss.backward()
+            self.optimizer.step()
+
+            batch_loss.append(loss.item())
+            pred = torch.argmax(output_student, dim=1)
+            batch_count += torch.sum(pred == y)
+
+        epoch_loss = np.mean(batch_loss)
+        epoch_acc = batch_count.item() / len(dataloader.dataset)
+        return epoch_loss, epoch_acc
+    
+    def _test_epoch(self):
+        self.student.eval()
+        dataloader = self.test_loader
+        batch_loss = []
+        batch_count = 0
+        with torch.no_grad(): 
+            for X, y in dataloader:
+                X, y = X.to(self.device), y.to(self.device)
+                output_teacher = self.teacher(X)
+                output_student = self.student(X) 
+                
+                hard_loss = self.loss_fn(output_student, y)
+                soft_loss = cross_entropy(output_student, output_teacher, 4.)
+                loss = hard_loss + 4.0 * soft_loss
+
+                batch_loss.append(loss.item())
+                pred = torch.argmax(output_student, dim=1)
+                batch_count += torch.sum(pred == y)
+
+        epoch_loss = np.mean(batch_loss)
+        epoch_acc = batch_count.item() / len(dataloader.dataset)
+        return epoch_loss, epoch_acc
+    
+    def train_test(self):
+        return super().train_test()
+    
+    def evaluate(self):
+        return super().evaluate()

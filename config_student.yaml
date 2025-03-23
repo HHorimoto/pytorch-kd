@@ -1,7 +1,7 @@
 config:
   root: "./data/"
-  epochs: 50
+  epochs: 20
   batch_size: 100
   learning_rate: 0.001
 
-  teacher: "./models/teacher.pth"
+  teacher: null # "./models/teacher.pth"

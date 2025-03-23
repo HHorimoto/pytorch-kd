@@ -18,7 +18,7 @@ from src.data.dataset import create_dataset
 from src.utils.seeds import fix_seed, worker_init_fn
 from src.visualization.visualize import plot
 from src.models.models import CNN
-from src.models.coachs import CoachStudent
+from src.models.coachs import Coach, CoachStudent
 
 def main():
 
@@ -40,10 +40,13 @@ def main():
     optimizer = optim.Adam(student.parameters(), lr=LR)
     loss_fn = nn.CrossEntropyLoss()
 
-    teacher = CNN(widen_factor=2).to(device)
-    teacher.load_state_dict(torch.load(TEACHER))
-
-    coach = CoachStudent(student, teacher, train_loader, test_loader, loss_fn, optimizer, device, EPOCHS)
+    if TEACHER is not None:
+        teacher = CNN(widen_factor=2).to(device)
+        teacher.load_state_dict(torch.load(TEACHER))
+        coach = CoachStudent(student, teacher, train_loader, test_loader, loss_fn, optimizer, device, EPOCHS)
+    else:
+        coach = Coach(student, train_loader, test_loader, loss_fn, optimizer, device, EPOCHS)
+        
     coach.train_test()
     train_loss, test_loss = coach.train_loss, coach.test_loss
     trues, preds = coach.evaluate()

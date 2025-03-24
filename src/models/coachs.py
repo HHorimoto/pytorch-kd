@@ -158,4 +158,22 @@ class CoachStudent(Coach):
         return super().train_test()
     
     def evaluate(self):
-        return super().evaluate()
+        self.student.eval()
+        preds, tures = [], []
+
+        dataloader = self.test_loader
+        with torch.no_grad():
+            for X, y in dataloader:
+                X, y = X.to(self.device), y.to(self.device)
+                output = self.student(X)
+                tures.append(y)
+                preds.append(output)
+                
+        tures = torch.cat(tures, axis=0)
+        preds = torch.cat(preds, axis=0)
+        _, preds = torch.max(preds, 1)
+
+        tures = tures.cpu().detach().numpy()
+        preds = preds.cpu().detach().numpy()
+                
+        return tures, preds

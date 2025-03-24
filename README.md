@@ -1,4 +1,4 @@
-# Knowledge Distillation (Kd) with Pytorch
+# Knowledge Distillation (KD) with Pytorch
 
 ## Usage
 

@@ -7,4 +7,11 @@ echo $now
 mkdir ./log/$now
 python ./student.py 2>&1 | tee ./log/$now/log.txt
 
-mv loss.png ./log/$now/
+# move files
+if [ -e "loss.png" ]; then
+    mv loss.png ./log/$now/
+fi
+
+if [ -e "accuracy.png" ]; then
+    mv accuracy.png ./log/$now/
+fi

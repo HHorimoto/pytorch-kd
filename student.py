@@ -49,13 +49,15 @@ def main():
         
     coach.train_test()
     train_loss, test_loss = coach.train_loss, coach.test_loss
+    train_acc, test_acc = coach.train_acc, coach.test_acc
     trues, preds = coach.evaluate()
     accuracy = accuracy_score(trues, preds)
 
     print("accuracy: ", accuracy)
     print(trues, preds)
 
-    plot(train_loss, test_loss)
+    plot(train_loss, test_loss, 'loss')
+    plot(train_acc, test_acc, 'accuracy')
 
 if __name__ == "__main__":
     fix_seed()

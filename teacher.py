@@ -42,13 +42,15 @@ def main():
     coach = Coach(teacher, train_loader, test_loader, loss_fn, optimizer, device, EPOCHS)
     coach.train_test()
     train_loss, test_loss = coach.train_loss, coach.test_loss
+    train_acc, test_acc = coach.train_acc, coach.test_acc
     trues, preds = coach.evaluate()
     accuracy = accuracy_score(trues, preds)
 
     print("accuracy: ", accuracy)
     print(trues, preds)
 
-    plot(train_loss, test_loss)
+    plot(train_loss, test_loss, 'loss')
+    plot(train_acc, test_acc, 'accuracy')
 
     torch.save(teacher.state_dict(), "teacher.pth")
 

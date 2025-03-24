@@ -1,10 +1,10 @@
 import matplotlib.pyplot as plt
 
-def plot(train_loss, test_loss):
-    plt.title("loss")
-    plt.xlabel("epoch")
-    plt.ylabel("loss")
-    plt.plot(train_loss, label='train')
-    plt.plot(test_loss, label='test')
+def plot(train, test, metric):
+    plt.figure()
+    plt.xlabel('epoch')
+    plt.ylabel(metric)
+    plt.plot(train, label='train')
+    plt.plot(test, label='test')
     plt.legend()
-    plt.savefig('loss.png')
+    plt.savefig(metric+'.png')

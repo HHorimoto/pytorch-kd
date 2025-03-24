@@ -22,11 +22,11 @@ The table below presents the results obtained from the experiments.
 
 The table shows that **Student-kd** achieves higher accuracy than **Student**, demonstrating the benefit of knowledge distillation. While the Teacher model has the best accuracy, it is much larger and slower. **Student-kd** retains the efficiency of Student but with improved performance, though at the cost of slightly longer training time.
 
-|            | Accuracy | Elapsed Time | Parameters |
-| ---------- | :------: | :----------: | :--------: |
-| Teacher    |  0.7836  |   516.643    | 12,626,890 |
-| Student    |  0.7546  |   455.307    | 3,163,114  |
-| Student-kd |  0.7632  |   514.012    | 3,163,114  |
+|            |  Accuracy  | Elapsed Time |  Parameters   |
+| ---------- | :--------: | :----------: | :-----------: |
+| Teacher    | **0.7836** |   516.643    |  12,626,890   |
+| Student    |   0.7546   | **455.307**  | **3,163,114** |
+| Student-kd |   0.7632   |   514.012    | **3,163,114** |
 
 
 #### Reference
